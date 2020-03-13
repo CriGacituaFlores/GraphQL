@@ -5,7 +5,8 @@ const {
   GraphQLObjectType,
   GraphQLString,
   GraphQLInt,
-  GraphQLSchema
+  GraphQLSchema,
+  GraphQLLIst
 } = graphql;
 
 const CompanyType = new GraphQLObjectType({
@@ -13,7 +14,13 @@ const CompanyType = new GraphQLObjectType({
   fields: {
     id: { type: GraphQLString },
     name: { type: GraphQLString },
-    description: { type: GraphQLString }
+    description: { type: GraphQLString },
+    users: {
+      type: new GraphQLLIst(UserType),
+      resolve(parentValue, args) {
+        return axios.get(`http:localhost:3000/companies/${parentValue.id}/users`).then(res => res.data);
+      }
+    }
   }
 });
 
